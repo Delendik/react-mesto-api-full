@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-
+  // console.log(req.headers.authorization);
   if (!authorization && !authorization.startsWith('Bearer ')) {
     return res
       .status(401)
@@ -17,6 +17,7 @@ module.exports = (req, res, next) => {
 
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
+    // console.log(payload);
   } catch (err) {
     return res
       .status(401)

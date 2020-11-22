@@ -32,7 +32,15 @@ module.exports.createCard = async (req, res) => {
 
 module.exports.deleteCard = async (req, res) => {
   try {
+    // console.log({'req.user': req.user});
+    // console.log({'req.params': req.params});
     const { _id } = req.params;
+    const cardForDelete = await Card.find({ _id });
+    // console.log({ 'cardForDelete': cardForDelete });
+    if (req.user._id !== cardForDelete[0].owner.toString()) {
+      res.status(404).send({ message: 'Карточку создал другой пользователь' });
+      return;
+    }
     const card = await Card.findOneAndRemove({ _id });
     if (!card) {
       res.status(404).send({ message: 'Нет карточки с таким id' });

@@ -23,6 +23,23 @@ module.exports.readUsers = async (req, res) => {
   }
 };
 
+module.exports.getUser = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    // console.log(req.user);
+    const user = await User.findById({ _id });
+    // console.log(req.user);
+    if (!user) {
+      res.status(404).send({ message: 'Нет пользователя с таким id' });
+      return;
+    }
+    res.status(200).send(user);
+  } catch (error) {
+    console.log(error);
+    checkError(error, res);
+  }
+};
+
 module.exports.readUser = async (req, res) => {
   try {
     const { _id } = req.params;
@@ -37,6 +54,21 @@ module.exports.readUser = async (req, res) => {
     checkError(error, res);
   }
 };
+
+// module.exports.readUser = async (req, res) => {
+//   try {
+//     // const { email } = req.params;
+//     const user = await User.findOne({ email: req.params.email });
+//     if (!user) {
+//       res.status(404).send({ message: 'Нет пользователя с таким email' });
+//       return;
+//     }
+//     res.status(200).send(user);
+//   } catch (error) {
+//     console.log(error);
+//     checkError(error, res);
+//   }
+// };
 
 module.exports.createUser = async (req, res) => {
   try {
