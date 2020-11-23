@@ -1,12 +1,7 @@
 const Card = require('../models/card');
 
-const checkError = (error, res) => {
-  if (error.name === 'CastError' || error.name === 'ValidationError') {
-    res.status(400).send({ message: 'Некорректные данные' });
-  } else {
-    res.status(500).send({ message: 'Ошибка на сервере' });
-  }
-};
+const checkError = require('../errors/checkError');
+const NotFoundError = require('../errors/notFoundError');
 
 module.exports.readCards = async (req, res) => {
   try {
@@ -21,7 +16,6 @@ module.exports.readCards = async (req, res) => {
 module.exports.createCard = async (req, res) => {
   try {
     const { name, link } = req.body;
-    // const card = await Card.create({ name, link, owner: req.user._id });
     const card = await Card.create({ name, link, owner: req.user });
     res.send({ data: card });
   } catch (error) {
@@ -30,30 +24,26 @@ module.exports.createCard = async (req, res) => {
   }
 };
 
-module.exports.deleteCard = async (req, res) => {
+module.exports.deleteCard = async (req, res, next) => {
   try {
-    // console.log({'req.user': req.user});
-    // console.log({'req.params': req.params});
     const { _id } = req.params;
     const cardForDelete = await Card.find({ _id });
-    // console.log({ 'cardForDelete': cardForDelete });
     if (req.user._id !== cardForDelete[0].owner.toString()) {
-      res.status(404).send({ message: 'Карточку создал другой пользователь' });
-      return;
+      throw new NotFoundError('Карточку создал другой пользователь');
     }
     const card = await Card.findOneAndRemove({ _id });
     if (!card) {
-      res.status(404).send({ message: 'Нет карточки с таким id' });
-      return;
+      throw new NotFoundError('Нет карточки с таким id');
     }
     res.status(200).send(card);
-  } catch (error) {
-    console.log('err = ', error.message);
-    checkError(error, res);
+  } catch (err) {
+    console.log('err = ', err.message);
+    // eslint-disable-next-line no-unused-expressions
+    err.statusCode ? next(err) : checkError(err, res);
   }
 };
 
-module.exports.likeCard = async (req, res) => {
+module.exports.likeCard = async (req, res, next) => {
   try {
     const card = await Card.findByIdAndUpdate(
       req.params._id,
@@ -61,17 +51,17 @@ module.exports.likeCard = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      res.status(404).send({ message: 'Нет карточки с таким id' });
-      return;
+      throw new NotFoundError('Нет карточки с таким id');
     }
     res.status(200).send(card);
-  } catch (error) {
-    console.log('err = ', error.message);
-    checkError(error, res);
+  } catch (err) {
+    console.log('err = ', err.message);
+    // eslint-disable-next-line no-unused-expressions
+    err.statusCode ? next(err) : checkError(err, res);
   }
 };
 
-module.exports.dislikeCard = async (req, res) => {
+module.exports.dislikeCard = async (req, res, next) => {
   try {
     const card = await Card.findByIdAndUpdate(
       req.params._id,
@@ -79,12 +69,12 @@ module.exports.dislikeCard = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      res.status(404).send({ message: 'Нет карточки с таким id' });
-      return;
+      throw new NotFoundError('Нет карточки с таким id');
     }
     res.status(200).send(card);
-  } catch (error) {
-    console.log('err = ', error.message);
-    checkError(error, res);
+  } catch (err) {
+    console.log('err = ', err.message);
+    // eslint-disable-next-line no-unused-expressions
+    err.statusCode ? next(err) : checkError(err, res);
   }
 };
