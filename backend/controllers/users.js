@@ -4,17 +4,17 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const checkError = require('../errors/checkError');
 const NotFoundError = require('../errors/notFoundError');
 const ConflictError = require('../errors/conflictError');
+const InvalidData = require('../errors/invalidData');
 
-module.exports.readUsers = async (req, res) => {
+module.exports.readUsers = async (req, res, next) => {
   try {
     const user = await User.find({});
     res.send(user);
   } catch (err) {
     console.log('err = ', err.message);
-    checkError(err, res);
+    next(err);
   }
 };
 
@@ -28,8 +28,7 @@ module.exports.getUser = async (req, res, next) => {
     res.status(200).send(user);
   } catch (err) {
     console.log('err = ', err.message);
-    // eslint-disable-next-line no-unused-expressions
-    err.statusCode ? next(err) : checkError(err, res);
+    next(err);
   }
 };
 
@@ -43,8 +42,7 @@ module.exports.readUser = async (req, res, next) => {
     res.status(200).send(user);
   } catch (err) {
     console.log('err = ', err.message);
-    // eslint-disable-next-line no-unused-expressions
-    err.statusCode ? next(err) : checkError(err, res);
+    next(err);
   }
 };
 
@@ -53,8 +51,7 @@ module.exports.createUser = async (req, res, next) => {
     const {
       name, about, avatar, email,
     } = req.body;
-    const existUser = await User.findOne({ email }).select('+password');
-    console.log(existUser);
+    const existUser = await User.findOne({ email });
     if (existUser) {
       throw new ConflictError('Пользователь с таким email уже существует');
     } else {
@@ -62,16 +59,18 @@ module.exports.createUser = async (req, res, next) => {
       const user = await User.create({
         name, about, avatar, email, password,
       });
-      res.send({ data: user });
+      res.send(user);
+      // res.send({
+      //   name, about, avatar, email,
+      // });
     }
   } catch (err) {
     console.log('err = ', err.message);
-    // eslint-disable-next-line no-unused-expressions
-    err.statusCode ? next(err) : checkError(err, res);
+    next(err);
   }
 };
 
-module.exports.updateUserInfo = async (req, res) => {
+module.exports.updateUserInfo = async (req, res, next) => {
   try {
     const { name } = req.body;
     const user = await User.findByIdAndUpdate(req.user._id, { name },
@@ -83,11 +82,11 @@ module.exports.updateUserInfo = async (req, res) => {
     res.send({ data: user });
   } catch (err) {
     console.log('err = ', err.message);
-    checkError(err, res);
+    next(err);
   }
 };
 
-module.exports.updateAvatarInfo = async (req, res) => {
+module.exports.updateAvatarInfo = async (req, res, next) => {
   try {
     const { avatar } = req.body;
     const user = await User.findByIdAndUpdate(req.user._id, { avatar },
@@ -99,14 +98,28 @@ module.exports.updateAvatarInfo = async (req, res) => {
     res.send({ data: user });
   } catch (err) {
     console.log('err = ', err.message);
-    checkError(err, res);
+    next(err);
   }
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  return User.findUserByCredentials(email, password)
+  return User.findOne({ email }).select('+password')
+    .then((user) => {
+      if (!user) {
+        throw new InvalidData('Неверный пользователь');
+      }
+
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            throw new InvalidData('Неверный пароль');
+          }
+
+          return user;
+        });
+    })
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
@@ -116,8 +129,6 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
+      next(err);
     });
 };

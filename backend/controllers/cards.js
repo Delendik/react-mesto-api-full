@@ -3,24 +3,24 @@ const Card = require('../models/card');
 const checkError = require('../errors/checkError');
 const NotFoundError = require('../errors/notFoundError');
 
-module.exports.readCards = async (req, res) => {
+module.exports.readCards = async (req, res, next) => {
   try {
     const card = await Card.find({});
     res.send(card);
-  } catch (error) {
-    console.log('err = ', error.message);
-    checkError(error, res);
+  } catch (err) {
+    console.log('err = ', err.message);
+    next(err);
   }
 };
 
-module.exports.createCard = async (req, res) => {
+module.exports.createCard = async (req, res, next) => {
   try {
     const { name, link } = req.body;
     const card = await Card.create({ name, link, owner: req.user });
     res.send({ data: card });
-  } catch (error) {
-    console.log('err = ', error.message);
-    checkError(error, res);
+  } catch (err) {
+    console.log('err = ', err.message);
+    next(err);
   }
 };
 
@@ -38,8 +38,7 @@ module.exports.deleteCard = async (req, res, next) => {
     res.status(200).send(card);
   } catch (err) {
     console.log('err = ', err.message);
-    // eslint-disable-next-line no-unused-expressions
-    err.statusCode ? next(err) : checkError(err, res);
+    next(err);
   }
 };
 
@@ -56,8 +55,7 @@ module.exports.likeCard = async (req, res, next) => {
     res.status(200).send(card);
   } catch (err) {
     console.log('err = ', err.message);
-    // eslint-disable-next-line no-unused-expressions
-    err.statusCode ? next(err) : checkError(err, res);
+    next(err);
   }
 };
 
@@ -74,7 +72,6 @@ module.exports.dislikeCard = async (req, res, next) => {
     res.status(200).send(card);
   } catch (err) {
     console.log('err = ', err.message);
-    // eslint-disable-next-line no-unused-expressions
-    err.statusCode ? next(err) : checkError(err, res);
+    next(err);
   }
 };
