@@ -1,0 +1,12 @@
+.logo{
+  background-image: url(../../images/logo.svg);
+  width: 142px;
+  height: 33px;
+  background-size: cover;
+}
+
+@media only screen and (max-width:880px){
+  .logo{
+    margin-left:8px;
+  }
+}

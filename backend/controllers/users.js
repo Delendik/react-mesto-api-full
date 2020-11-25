@@ -56,13 +56,18 @@ module.exports.createUser = async (req, res, next) => {
       throw new ConflictError('Пользователь с таким email уже существует');
     } else {
       const password = await bcrypt.hash(req.body.password, 10);
+      // const { _id } = await User.create({
+      //   name, about, avatar, email, password,
+      // });
+      // res.send({
+      //   name, about, avatar, email, _id,
+      // });
       const user = await User.create({
         name, about, avatar, email, password,
       });
-      res.send(user);
-      // res.send({
-      //   name, about, avatar, email,
-      // });
+      res.send({
+        user,
+      });
     }
   } catch (err) {
     console.log('err = ', err.message);

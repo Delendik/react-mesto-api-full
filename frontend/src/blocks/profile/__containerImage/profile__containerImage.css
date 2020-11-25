@@ -1,0 +1,47 @@
+.profile__containerImage{
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  position: relative;
+  margin: 0;
+}
+
+.profile__containerImage::after {
+  content: url(../../../images/edit_profile.svg);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.profile__containerImage:hover {
+  cursor: pointer;
+}
+
+@keyframes opacityEdit{
+  from{
+    opacity:0;
+  }
+  to{
+    opacity: 1;
+  }
+}
+
+.profile__containerImage:hover:after{
+  animation: opacityEdit 1s linear 1 forwards;
+}
+
+@keyframes opacityAvatar{
+  from{
+    opacity:1;
+  }
+  to{
+    opacity: 0.2;
+  }
+}
+
+.profile__containerImage:hover .profile__image{
+  animation: opacityAvatar 1s linear 1 forwards;
+}
+

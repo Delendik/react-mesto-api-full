@@ -1,0 +1,21 @@
+.card__picture{
+  display: block;
+  width: 282px;
+  height: 282px;
+  border-radius: 10px 10px 0 0;
+  object-fit: cover;
+  color: #ffffff;
+}
+
+@keyframes transparency{
+  from{
+    opacity: 1;
+  }
+  to{
+    opacity: 0.6;
+  }
+}
+
+.card__picture:hover{
+  animation: transparency 1s linear 1 forwards;
+}

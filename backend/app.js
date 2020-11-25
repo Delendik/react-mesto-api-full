@@ -7,11 +7,10 @@ const mongoose = require('mongoose');
 const path = require('path');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+app.use(express.static(path.join(__dirname, 'public')));
 const PORT = 3000;
 
 const routes = require('./routes/index.js');
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
