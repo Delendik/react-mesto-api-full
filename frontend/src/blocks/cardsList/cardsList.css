@@ -1,0 +1,13 @@
+@import url("./__empty/cardsList__empty.css");
+
+.cardsList{
+  padding: 0;
+  list-style-type: none;
+  max-width: 100%;
+  margin: 50px auto 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 282px);
+  grid-row-gap: 21px;
+  grid-column-gap: 18px;
+  justify-content: center;
+}

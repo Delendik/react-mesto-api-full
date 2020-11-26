@@ -1,0 +1,29 @@
+@import url(./_black/card__like_black.css);
+
+.card__like{
+  padding: 0;
+  border: none;
+  background-image: url("../../../images/Like.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: auto;
+  width: 21px;
+  height: 19px;
+  /* margin-right: 7px; */
+  cursor: pointer;
+  box-shadow: none;
+  background-color: #FFF;
+}
+
+@keyframes transparency{
+  from{
+    opacity: 1;
+  }
+  to{
+    opacity: 0.6;
+  }
+}
+
+.card__like:hover{
+  animation: transparency 1s linear 1 forwards;
+}

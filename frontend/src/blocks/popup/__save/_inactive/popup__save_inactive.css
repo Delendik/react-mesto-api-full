@@ -1,0 +1,21 @@
+.popup__save_inactive{
+  width: 358px;
+  min-height: 50px;
+  background: #C4C4C4;
+  border-radius: 2px;
+  font-size: 18px;
+  line-height: 1.22;
+  text-align: center;
+  color: #000000;
+  margin-top: 48px;
+  cursor: pointer;
+  box-shadow: none;
+  opacity: 0.2;
+  
+}
+
+@media only screen and (max-width:570px){
+  .popup__save_inactive{
+    width: 218px;
+  }
+}

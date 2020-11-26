@@ -1,0 +1,22 @@
+.profile__avatar{
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  background-image: url(../../../images/kusto.jpg);
+  background-size: cover;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+@keyframes transparency{
+  from{
+    opacity: 1;
+  }
+  to{
+    opacity: 0.2;
+  }
+}
+
+.profile__button:hover{
+  animation: transparency 1s linear 1 forwards;
+}
