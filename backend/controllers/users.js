@@ -56,17 +56,11 @@ module.exports.createUser = async (req, res, next) => {
       throw new ConflictError('Пользователь с таким email уже существует');
     } else {
       const password = await bcrypt.hash(req.body.password, 10);
-      // const { _id } = await User.create({
-      //   name, about, avatar, email, password,
-      // });
-      // res.send({
-      //   name, about, avatar, email, _id,
-      // });
-      const user = await User.create({
+      const { _id } = await User.create({
         name, about, avatar, email, password,
       });
       res.send({
-        user,
+        name, about, avatar, email, _id,
       });
     }
   } catch (err) {
@@ -77,8 +71,8 @@ module.exports.createUser = async (req, res, next) => {
 
 module.exports.updateUserInfo = async (req, res, next) => {
   try {
-    const { name } = req.body;
-    const user = await User.findByIdAndUpdate(req.user._id, { name },
+    const { name, about } = req.body;
+    const user = await User.findByIdAndUpdate(req.user._id, { name, about },
       {
         new: true,
         runValidators: true,

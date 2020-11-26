@@ -44,7 +44,7 @@ function App() {
       if (res) {
         console.log(res);
         setLoginIn(true);
-        setEmail(res.data.email);
+        setEmail(res.email);
         history.push('/');
       }
     })
@@ -62,6 +62,10 @@ function App() {
   }, []);
   
   useEffect(()=>{
+    console.log(loginIn)
+    if(!loginIn){
+      return;
+    }
     Promise.all([ 
       api.getUserInfo(), 
       api.getCardsFromServer() 
@@ -85,7 +89,7 @@ function App() {
     .catch((err) => { 
       console.log(err);  
     }); 
-  }, [])
+  }, [loginIn])
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -132,9 +136,13 @@ function App() {
   }
 
   function handleUpdateUser(user){
+    console.log(user);
+    console.log(currentUser);
     api.changeUserInfo(user)
     .then(res=>{
-      setCurrentUser(res)
+      console.log(res.data);
+      setCurrentUser(res.data)
+      console.log(res.data);
     })
     .catch((err) => { 
       console.log(err);  
@@ -145,7 +153,7 @@ function App() {
   function handleUpdateAvatar(avatar){
     api.changeAvatar(avatar)
     .then(res=>{
-      setCurrentUser(res)
+      setCurrentUser(res.data)
     })
     .catch((err) => { 
       console.log(err);  
@@ -174,7 +182,7 @@ function App() {
   const onRegister = (email, password) =>{
     auth.register(email, password)
     .then((res) => {
-      if(res.data){
+      if(res){
         setSuccessRegister(true);
         history.push('/sign-in');
       } else {

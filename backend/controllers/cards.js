@@ -1,6 +1,5 @@
 const Card = require('../models/card');
 
-const checkError = require('../errors/checkError');
 const NotFoundError = require('../errors/notFoundError');
 
 module.exports.readCards = async (req, res, next) => {

@@ -8,7 +8,7 @@ class Api{
   
   getUserInfo(){
     return fetch(`${this.url}/users/me`, {
-      headers: this.headers
+      headers: this.getHeaders()
     })
     .then(res =>{ 
       return this._getResponseData(res);
@@ -17,7 +17,7 @@ class Api{
 
   getCardsFromServer(){
     return fetch(`${this.url}/cards`, {
-      headers: this.headers
+      headers: this.getHeaders()
     })
     .then(res =>{ 
       return this._getResponseData(res);
@@ -27,7 +27,7 @@ class Api{
   changeUserInfo({name, about}){
     return fetch(`${this.url}/users/me`, {
       method: 'PATCH',
-      headers: this.headers,
+      headers: this.getHeaders(),
       body: JSON.stringify({name, about})
     })
     .then(res =>{ 
@@ -38,7 +38,7 @@ class Api{
   changeAvatar(items){
     return fetch(`${this.url}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this.headers,
+      headers: this.getHeaders(),
       body: JSON.stringify(items)
     })
     .then(res =>{ 
@@ -49,7 +49,7 @@ class Api{
   addNewCard(items){
     return fetch(`${this.url}/cards`, {
       method: 'POST',
-      headers: this.headers,
+      headers: this.getHeaders(),
       body: JSON.stringify(items)
     })
     .then(res =>{ 
@@ -60,7 +60,7 @@ class Api{
   deleteCard(id){
     return fetch(`${this.url}/cards/${id}`, {
       method: 'DELETE',
-      headers: this.headers
+      headers: this.getHeaders()
     })
     .then(res =>{ 
       return this._getResponseData(res);
@@ -70,7 +70,7 @@ class Api{
   changeLikeCardStatus(id, isLiked){
     return fetch(`${this.url}/cards/${id}/likes`, {
       method: isLiked ?  'PUT' : 'DELETE',
-      headers: this.headers
+      headers: this.getHeaders()
     })
     .then(res =>{ 
       return this._getResponseData(res);
@@ -82,6 +82,14 @@ class Api{
       return res.json()
     }
     return Promise.reject(`Ошибка: ${res.status}`);
+  }
+
+  getHeaders(){
+    const token = getToken(); 
+    return {
+      ...this.headers,
+      'Authorization': `Bearer ${token}`,
+    }
   }
 }
 const token = getToken();
