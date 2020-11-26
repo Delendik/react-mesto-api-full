@@ -50,7 +50,7 @@ class Api{
     return fetch(`${this.url}/cards`, {
       method: 'POST',
       headers: this.getHeaders(),
-      body: JSON.stringify(items)
+      body: JSON.stringify({name:items.name, link: items.link})
     })
     .then(res =>{ 
       return this._getResponseData(res);
@@ -93,7 +93,6 @@ class Api{
   }
 }
 const token = getToken();
-console.log(token)
 
 const api = new Api({
   url: 'http://localhost:3000',

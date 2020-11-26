@@ -34,15 +34,12 @@ function App() {
 
   const tokenCheck = () => {
     const token = getToken();
-    console.log("Check token");
-    console.log(token);
     if (!token) {
       return;
     }
     auth.getContent(token).
     then((res) => {
       if (res) {
-        console.log(res);
         setLoginIn(true);
         setEmail(res.email);
         history.push('/');
@@ -62,7 +59,6 @@ function App() {
   }, []);
   
   useEffect(()=>{
-    console.log(loginIn)
     if(!loginIn){
       return;
     }
@@ -73,8 +69,6 @@ function App() {
     .then( 
       json=>{ 
         const [userInfo, data] = json; 
-        console.log(userInfo)
-        console.log(data)
         setCurrentUser(userInfo)
         const items = data.map(item => ({ 
           link: item.link,
@@ -103,7 +97,7 @@ function App() {
   }, [])
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
       const newCards = cards.map((c) => c._id === card._id ? newCard : c);
       setCards(newCards);
@@ -136,13 +130,9 @@ function App() {
   }
 
   function handleUpdateUser(user){
-    console.log(user);
-    console.log(currentUser);
     api.changeUserInfo(user)
     .then(res=>{
-      console.log(res.data);
       setCurrentUser(res.data)
-      console.log(res.data);
     })
     .catch((err) => { 
       console.log(err);  
@@ -164,7 +154,8 @@ function App() {
   function handleAddPlaceSubmit(card){
     api.addNewCard(card).then(
       (newCard) => {
-      setCards([...cards, newCard]); 
+        console.log(newCard)
+      setCards([...cards, newCard.data]); 
     })
     .catch((err) => { 
       console.log(err);  
