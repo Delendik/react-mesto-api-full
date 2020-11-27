@@ -12,7 +12,7 @@ const cardSchema = new Schema({
     required: true,
     validate: {
       validator(v) {
-        return /^(http|https):\/\/w?w?w?\.?(\w|\D)+\.(ru|com)/.test(v);
+        return /^https?:\/\/(www\.)?[\w-.~:/?#[\]@!$&'()*+,;=]+#?$/i.test(v);
       },
     },
   },

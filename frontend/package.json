@@ -16,11 +16,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "postbuild": "mv  build/* ../backend/public",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build && scp -r ./build/* delendik@178.154.230.21:/home/delendik/frontend" 
   },
   "eslintConfig": {
     "extends": "react-app"

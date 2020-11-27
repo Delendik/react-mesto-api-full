@@ -95,6 +95,7 @@ class Api{
 const token = getToken();
 
 const api = new Api({
+  //url: 'http://api.delendik.students.nomoreparties.space',
   url: 'http://localhost:3000',
   headers: {
     'Content-Type': 'application/json',
