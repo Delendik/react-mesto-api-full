@@ -34,9 +34,10 @@ app.use(errors());
 app.use(errorLogger);
 
 app.use((err, req, res, next) => {
+  console.log(err);
   if (err.name === 'CastError' || err.name === 'ValidationError') {
     res.status(400).send({ message: 'Некорректные данные' });
-  } else if (err.statusCode === 409 || err.statusCode === 404 || err.statusCode === 401) {
+  } else if (err.statusCode) {
     res.status(err.statusCode).send({ message: err.message });
   } else {
     res.status(500).send({ message: 'Ошибка на сервере' });
