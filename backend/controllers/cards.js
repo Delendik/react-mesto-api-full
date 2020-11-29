@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 
 const NotFoundError = require('../errors/notFoundError');
+const Forbidden = require('../errors/forbidden');
 
 module.exports.readCards = async (req, res, next) => {
   try {
@@ -26,14 +27,13 @@ module.exports.createCard = async (req, res, next) => {
 module.exports.deleteCard = async (req, res, next) => {
   try {
     const { _id } = req.params;
-    const cardForDelete = await Card.find({ _id });
-    if (req.user._id !== cardForDelete[0].owner.toString()) {
-      throw new NotFoundError('Карточку создал другой пользователь');
+    const cardForDelete = await Card.findById({ _id });
+    if (cardForDelete === null) {
+      throw new NotFoundError('Нет карточки с таким id');
+    } else if (req.user._id !== cardForDelete.owner.toString()) {
+      throw new Forbidden('Карточку создал другой пользователь');
     }
     const card = await Card.findOneAndRemove({ _id });
-    if (!card) {
-      throw new NotFoundError('Нет карточки с таким id');
-    }
     res.status(200).send(card);
   } catch (err) {
     console.log('err = ', err.message);
