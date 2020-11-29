@@ -6,7 +6,9 @@
   "scripts": {
     "test": "jest",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "lint": "eslint **/*.js",
+    "lint-fix": "eslint --fix --ext .js,.jsx ."
   },
   "repository": {
     "type": "git",
