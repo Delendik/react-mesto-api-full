@@ -1,9 +1,9 @@
-# Проект Mesto фронтенд + бэкенд
+# Место
 
-## Бэкенд расположен по ссылке
+## Проект по хранению картинок для группы знакомых:
 
-http://api.delendik.students.nomoreparties.space/
+http://delendik.students.nomoreparties.space/  
 
-## Результат
-
-http://delendik.students.nomoreparties.space/
+## О технологиях:  
+Front-end часть написана на React  
+Back-end часть написана на Node JS.  
